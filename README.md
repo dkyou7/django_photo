@@ -113,9 +113,20 @@ class Photo(models.Model):
   admin.site.register(Photo)
   ```
 
-  
 
 #### 3.4 업로드 폴더 관리
+
+- 미디어 파일 추가 : 보안
+
+`config/settings.py`
+
+```python
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+```
+
+
 
 #### 3.5 관리자 페이지 커스터마이징
 
