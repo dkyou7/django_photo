@@ -40,7 +40,7 @@ python manage.py runserver
    .DS_Store
    ```
 
-### 3. 앱 만들기
+### 3. Photo앱 만들기
 
 #### 3.1 앱 만들기
 
@@ -415,7 +415,88 @@ TEMPLATES = [
 {% endblock %}
 ```
 
+### 4. Account 앱 만들기
 
+#### 4.1 accounts 앱 만들기
 
-#### 3.9 사진 표시하기
+> python manage.py startapp accounts
+
+`config/settings.py`에 'accounts' 추가
+
+#### 4.2 로그인, 로그아웃 기능 추가
+
+##### 가. accounts/urls.py 만들기
+
+```python
+from django.urls import path
+from django.contrib.auth import views as auth_view
+
+app_name = 'photo'
+
+urlpatterns = [
+    path('login/', auth_view.LoginView.as_view(),name='login'),
+    path('logout/', auth_view.LogoutView.as_view(template_name='registration/logout.html'),name='logout'),
+]
+```
+
+- `config/urls.py`
+
+``` python
+path('accounts/',include('accounts.urls')),
+```
+
+##### 나. 템플릿 만들고 링크 연결하기
+
+`accounts/templates/registration/login.html`
+
+```python
+{% extends 'base.html' %}
+{% block title %}- Login{% endblock %}
+
+{% block content %}
+<div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 panel panel-default">
+            <div class="alert alert-info">Please enter your login informations.</div>
+            <form action="" method="post">
+                {{form.as_p}}
+                {% csrf_token %}
+                <input class="btn btn-primary" type="submit" value="Login">
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+</div>
+{% endblock %}
+```
+
+`accounts/templates/registration/logout.html`
+
+```python
+{% extends 'base.html' %}
+{% block title %}- Logout{% endblock %}
+
+{% block content %}
+<div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 panel panel-default">
+            <div class="alert alert-info">You have been successfully logged out.</div>
+            <a class="btn btn-primary" href="{% url 'accounts:login' %}">Click to Login</a>
+        </div>
+        <div class="col-md-2"></div>
+</div>
+{% endblock %}
+```
+
+##### 다. base.html 수정
+
+```python
+                <li class="nav-item"><a href="{% url 'accounts:logout' %}" class="nav-link">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'accounts:login' %}" class="nav-link">Login</a></li>
+```
+
+#### 4.3 회원가입 기능 추가
+
+- 뷰와 폼을 만들자
+- 
 

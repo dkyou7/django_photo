@@ -19,6 +19,7 @@ from django.urls import path,include
 urlpatterns = [
     path('',include('photo.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/',include('accounts.urls')),
 ]
 
 from django.conf.urls.static import static
