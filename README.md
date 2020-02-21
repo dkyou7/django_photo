@@ -497,6 +497,119 @@ path('accounts/',include('accounts.urls')),
 
 #### 4.3 회원가입 기능 추가
 
-- 뷰와 폼을 만들자
-- 
+##### 가. 폼을 만들자
+
+- `accounts/forms.py`
+
+```python
+from django.contrib.auth.models import User
+from django import forms
+
+class RegisterForm(forms.ModelForm):
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Repeat Password', widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username','first_name','last_name','email']
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('Passwords not matched!')
+        return cd['password2']
+```
+
+##### 나. 뷰를 만들자
+
+- `accounts/views.py`
+
+```python
+from django.shortcuts import render
+from .forms import RegisterForm
+
+# Create your views here.
+def register(request):
+    if request.method == 'POST':
+        user_form = RegisterForm(request.POST)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            return render(request,'registration/register_done.html',{'new_user':new_user})
+    else:
+        user_form = RegisterForm()
+
+    return render(request,'registration/register.html',{'form':user_form})
+```
+
+##### 다. url에 연결해주자
+
+```python
+from .views import register
+
+path('register/',register,name='register'),
+```
+
+##### 라. 띄워주기 위한 template 작성하자
+
+- register, register_done 파일 작성
+
+### 5. 댓글 기능 구현하기
+
+#### 5.1 DISQUS 가입
+
+#### 5.2 DISQUS 앱 설치
+
+> pip install django-disqus
+
+settings.py 에 'disqus','django.contrib.sites' 등록
+
+> python manage.py migrate
+
+- Disqus 사용을 위해 변수 추가
+
+  ```python
+  DISQUS_WEBSITE_SHORTNAME = 'dstagram-django' # <-- 설치앱이름으로다가
+  SITE_ID = 1
+  ```
+
+- 댓글 시스템 추가
+
+  ```html
+  <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8 panel panel-default">
+          {% load disqus_tags %}
+          {% disqus_show_comments %}
+      </div>
+      <div class="col-md-2"></div>
+  </div>
+  ```
+
+#### 5.3 권한 제한하기
+
+##### 가. 라이브러리 추가
+
+```python
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+```
+
+- 데코레이터는 함수형 뷰에서 사용, 믹스인은 클래스형 뷰에서 사용
+
+##### 나. 예시
+
+```python
+@login_required
+def photo_list(request):
+    ...
+    
+class PhotoUploadView(LoginRequiredMixin, CreateView):
+    ...
+```
+
+### 6. 아마존 S3 연동하기
+
+### 7. 해로쿠 베포하기
 
