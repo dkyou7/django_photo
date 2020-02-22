@@ -2,7 +2,7 @@
 
 # Dstagram
 
-## django로 구현해보기 3
+## [django로 구현해보기 3]
 
 ### 1. 기능
 
