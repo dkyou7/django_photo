@@ -611,5 +611,65 @@ class PhotoUploadView(LoginRequiredMixin, CreateView):
 
 ### 6. 아마존 S3 연동하기
 
+#### 6.1 아마존 가입
+
+#### 6.2 S3 버킷 생성
+
+#### 6.3 IAM 설정
+
+- AmazonS3FullAccess 설정하기
+
+#### 6.4 S3 연동하기
+
+```bash
+pip install boto3
+pip install django-storage
+```
+
+- `config/settings.py`
+
+```python
+INSTALLED_APPS=[
+    'storages',
+]
+```
+
+```python
+AWS_ACCESS_KEY_ID = 'Your S3 Key'
+AWS_SECRET_ACCESS_KEY = 'Your S3 Secret'
+AWS_REGION = 'ap-northeast-2'
+AWS_STORAGE_BUCKET_NAME = 'Your Bucket Name'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
+```
+
+이렇게 된다면 비밀키를 노출할 수 있다.
+
+이를 해결하기 위해 따로 설정하는 방법이 [여기](https://wayhome25.github.io/django/2017/07/11/django-settings-secret-key/)에 있다.
+
+- config/asset_storage.py`
+
+```python
+from storages.backends.s3boto3 import S3Boto3Storage
+
+class MediaStorage(S3Boto3Storage):
+    location = 'media'
+    file_overwrite = False
+```
+
+- `config/urls.py`
+
+```python
+# 아마존 s3 서비스 이용으로 인한 제거
+# from django.conf.urls.static import static
+# from django.conf import settings
+#
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
 ### 7. 해로쿠 베포하기
 

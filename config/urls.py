@@ -22,7 +22,8 @@ urlpatterns = [
     path('accounts/',include('accounts.urls')),
 ]
 
-from django.conf.urls.static import static
-from django.conf import settings
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# 아마존 s3 서비스 이용으로 인한 제거
+# from django.conf.urls.static import static
+# from django.conf import settings
+#
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
