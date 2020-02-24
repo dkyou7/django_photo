@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'photo',
     'accounts',
     'disqus',
+    'storages',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
