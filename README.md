@@ -673,3 +673,5 @@ class MediaStorage(S3Boto3Storage):
 
 ### 7. 해로쿠 베포하기
 
+- 해당 교과서에서는 heroku 배포하기 위해서는 AWS_ACCESS_CODE 를 git에 올려야 하기 때문에 여기까지 진행
+
